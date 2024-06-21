@@ -26,15 +26,18 @@ function addGo(e) {
 }
 
 function checkScore() {
-    const allSquares = document.querySelectorAll(".square"); // Corrected selector
+    const allSquares = document.querySelectorAll(".square");
     const winningCombos = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8],
         [0, 3, 6], [1, 4, 7], [2, 5, 8],
         [0, 4, 8], [2, 4, 6]
     ];
 
+    let circleWins = false;
+    let crossWins = false;
+
     winningCombos.forEach(array => {
-        const circleWins = array.every(cell => 
+        circleWins = array.every(cell => 
             allSquares[cell].firstChild?.classList.contains("circle"));
         if (circleWins) {
             infoDisplay.textContent = "Circle Wins!";
@@ -43,11 +46,20 @@ function checkScore() {
     });
 
     winningCombos.forEach(array => {
-        const crossWins = array.every(cell => 
+        crossWins = array.every(cell => 
             allSquares[cell].firstChild?.classList.contains("cross"));
         if (crossWins) {
             infoDisplay.textContent = "Cross Wins!";
             allSquares.forEach(square => square.replaceWith(square.cloneNode(true)));
         }
     });
+
+    if (!circleWins && !crossWins) {
+        const isDraw = [...allSquares].every(square => 
+            square.firstChild);
+        if (isDraw) {
+            infoDisplay.textContent = "It's a Draw!";
+            allSquares.forEach(square => square.replaceWith(square.cloneNode(true)));
+        }
+    }
 }
